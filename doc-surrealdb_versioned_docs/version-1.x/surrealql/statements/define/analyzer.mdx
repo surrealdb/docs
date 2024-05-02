@@ -90,7 +90,7 @@ Below is an example of how to use the ngram filter:
 DEFINE ANALYZER example_ngram TOKENIZERS class FILTERS ngram(1,3);
 ```
 
-For example, if you had the text **"apple banana"**, the `class` tokenizer would split by whitespace, which the `ngram` filter would further split into these tokens: **["a", "p", "p", "l", "e", "ap", "pp", "pl", "le", "app", "ppl", "ple", "b", "a", "n", "a", "n", "a", "ba", "an", "na", "an", "na", "ban", "ana", "nan", "ana"]**. 
+For example, if you had the text **"apple man"**, the `class` tokenizer would split by whitespace, which the `ngram` filter would further split into these tokens: **["a", "p", "p", "l", "e", "ap", "pp", "pl", "le", "app", "ppl", "ple", "m", "a", "n", "ma", "an", "man"]**. 
 
 ### `edgengram(min,max)`
 
