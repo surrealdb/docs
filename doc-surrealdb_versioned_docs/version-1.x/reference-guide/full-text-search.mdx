@@ -7,7 +7,7 @@ description: In SurrealDB, Full-Text Search supports advanced features like basi
 
 # Full-Text Search
 
-Full-Text search is a feature that allows search capabilities within a database. This feature can be customized with specific analyzers and tokenizers to refine the search process.
+Full-Text search is a feature that allows search capabilities within a database. This feature can be customized with specific analyzers that use tokenizers and filters to refine the search process.
 
 In SurrealDB, Full-Text Search supports advanced features like basic and advanced text matching, proximity searches, result ranking, and keyword highlighting⁠.
 
@@ -15,39 +15,37 @@ Full-Text Search in SurrealDB is [ACID-compliant](https://en.wikipedia.org/wiki/
 
 ## Core Concepts and Definitions
 
-In order to perform Full-Text Search on textual data within SurrealDB, we leverage analyzers, tokenizers, indexes and filters to optimize the search precision.
-We also use different search functions to highlight keywords and improve their relevance.
+In order to perform Full-Text Search on textual data, SurrealDB leverages analyzers, tokenizers, fiters and indexes to optimize search precision. It also use different search functions to highlight keywords and improve their relevance.
 
 ## Analyzers
 
-[Analyzers](/docs/surrealdb/surrealql/statements/define/analyzer) are configurations that use tokenizers or filters to prepare text data for searching.
+[Analyzers](/docs/surrealdb/surrealql/statements/define/analyzer) are configurations that use tokenizers and/or filters to prepare text data for searching.
 
-They are foundational to how text is processed in Full-Text Search. It is defined by its name, a set of tokenizers, and a collection of filters.
+An analyzer is foundational to how text is processed in Full-Text Search. It is defined by its name, a set of tokenizers, and a set of filters.
 
 ## Tokenizers
 
-[Tokenizers](/docs/surrealdb/surrealql/statements/define/analyzer#tokenizers) break down text into manageable tokens based on specified rules like spaces or punctuation. 
-If we tokenize the sentence '*Getting started with SurrealDB*' based on space, it would be broken down into tokens: Getting, started, with, SurrealDB.
+[Tokenizers](/docs/surrealdb/surrealql/statements/define/analyzer#tokenizers) break down text into manageable tokens based on specified rules like spaces or punctuation.
+
+If we tokenize the sentence '*Getting started with SurrealDB*' based on blank spaces, it would be broken down into the tokens Getting, started, with, and SurrealDB.
 
 ```surql
 -- Defining a tokenizer that splits text into words based on spaces
 DEFINE ANALYZER space_tokenizer TOKENIZERS blank;
-
 ```
 
 ## Filters
 
-[Filters](/docs/surrealdb/surrealql/statements/define/analyzer#filters) process tokens for further refinement, such as converting to lowercase, removing special characters or breaking down tokens into useful prefixes to prepare for more effective searching.
+[Filters](/docs/surrealdb/surrealql/statements/define/analyzer#filters) process tokens for further refinement, such as converting to lowercase, removing special characters or breaking down words into their root forms to prepare for more effective searching.
 
 ```surql
 -- Combining tokenizers and filters into a custom analyzer
 DEFINE ANALYZER custom_analyzer TOKENIZERS blank FILTERS lowercase, snowball(english);
-
 ```
 
 ## Define a Full-Text Index
 
-To make a text field searchable, you need to set up a [full-text index](/docs/surrealdb/surrealql/statements/define/indexes/) on it by using the 'search' keyword. This step is necessary to search through the text easily.
+To make a text field searchable, you need to set up a [full-text index](/docs/surrealdb/surrealql/statements/define/indexes/) on it by using the 'search' keyword.
 
 Depending on the use case, each field can be associated with a different analyser. 
 
@@ -64,7 +62,6 @@ The [MATCHES](/docs/surrealdb/surrealql/operators#matches)  operator  (@@) is 
 ```surql
 -- Using the MATCHES (@@) operator in a query
 SELECT * FROM book WHERE content @@ 'tools';
-
 ```
 
 ## Highlighting
@@ -88,13 +85,13 @@ FROM book WHERE title @1@ 'linux';
 
 The [`search::score`](/docs/surrealdb/surrealql/functions/search#searchscore) helps with scoring and ranking the search results based on their relevance to the search terms.
 
-The relevance score is a decimal number typically ranging from 0 to 1, where a score closer to 1 indicates a higher relevance of the search result to the query terms, and a score closer to 0 indicates lower relevance. This score helps in sorting or filtering results based on how closely they match the user's search intent
+The relevance score is a decimal number typically ranging from 0 to 1, where a score closer to 1 indicates a higher relevance of the search result to the query terms, and a score closer to 0 indicates lower relevance. This score helps in sorting or filtering results based on how closely they match the user's search intent.
 
 ```surql
 -- Ordering search results by relevance score, where the title should be more relevant than content
 SELECT title,  search::score(0) * 2 + search::score(1) * 1 AS relevance 
 FROM book WHERE title @0@ 'linux' AND content @1@ 'ubuntu' 
-ORDER BY relevance DESC;
+ORDER BY relevance DESC
 LIMIT 10;
 ```
 
