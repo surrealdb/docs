@@ -70,63 +70,75 @@ Filters take on the task of transforming these tokens for further processing and
 
 ### `ascii`
 
-The ascii filter is responsible for processing tokens by replacing or removing diacritical marks (accents and special characters) from the text. It helps standardize text by converting accented characters to their basic ASCII equivalents, making it more suitable for various text analysis tasks.
+The ascii filter processes tokens by replacing or removing diacritical marks (accents and special characters) from the text. It helps standardize text by converting accented characters to their basic ASCII equivalents, making it more suitable for various text analysis tasks.
 
-For example, if you had the text **"résumé café"**, the ascii filter would create two tokens, **["resume", "cafe"]**. Below is an example of how to use the ascii filter:
+Below is an example of how to use the ascii filter:
 
 ```surql
 DEFINE ANALYZER example_ascii TOKENIZERS class FILTERS ascii;
 ```
 
+For example, with the text **"résumé café"**, the `class` tokenizer would split by whitespace and the `ascii` filter would remove the diacritics, returning **["resume", "cafe"]**.
+
 ### `ngram(min,max)`
 
-The ngram filter is used to create a sequence of 'n' tokens from a given sample of text or speech. These items can be syllables, letters, words or base pairs according to the application. It accepts two parameters `min` and `max` which indicates that you want to create n-grams starting from min to size of max. 
+The ngram filter creates a sequence of 'n' tokens from a given sample of text or speech. These items can be syllables, letters, words or base pairs according to the application. It accepts two parameters `min` and `max` which indicates that you want to create n-grams starting from min to size of max. 
 
-For example, if you had the text **"apple banana"**, the ngram filter would create these tokens: **["a", "p", "p", "l", "e", "ap", "pp", "pl", "le", "app", "ppl", "ple", "b", "a", "n", "a", "n", "a", "ba", "an", "na", "an", "na", "ban", "ana", "nan", "ana"]**. Below is an example of how to use the ngram filter:
+Below is an example of how to use the ngram filter:
 
 ```surql
 DEFINE ANALYZER example_ngram TOKENIZERS class FILTERS ngram(1,3);
 ```
 
+For example, if you had the text **"apple banana"**, the `class` tokenizer would split by whitespace, which the `ngram` filter would further split into these tokens: **["a", "p", "p", "l", "e", "ap", "pp", "pl", "le", "app", "ppl", "ple", "b", "a", "n", "a", "n", "a", "ba", "an", "na", "an", "na", "ban", "ana", "nan", "ana"]**. 
+
 ### `edgengram(min,max)`
 
-The edgengram filter is used to create tokens that represent prefixes of terms. It generates a sequence of tokens that gradually build up a term, which can be useful for autocomplete or searching based on partial words. It accepts two parameters `min` and `max` which define the minimum and maximum amount of characters in the prefix.
+The edgengram filter is used to create tokens that represent prefixes. It generates a sequence of tokens that gradually build up a term, which can be useful for autocomplete or searching based on partial words. It accepts two parameters `min` and `max` which define the minimum and maximum amount of characters in the prefix.
 
-For example, if you had the text **"apple banana"**, the edgengram filter would create six tokens, **["a", "ap", "app", "b", "ba", "ban"]**. Below is an example of how to use the edgengram filter:
+Below is an example of how to use the edgengram filter:
 
 ```surql
 DEFINE ANALYZER example_edgengram TOKENIZERS class FILTERS edgengram(1,3);
 ```
 
+For example, if you had the text **"apple banana"**, the `class` tokenizer would split by whitespace, which the edgengram filter would further split into six tokens, returning **["a", "ap", "app", "b", "ba", "ban"]**. 
+
 ### `lowercase`
 
 The lowercase filter converts tokens to lowercase, ensuring that text is consistently in lowercase format. This is often used to make text case-insensitive for search and analysis purposes.
 
-For example, if you had the text **"Hello World"**, the lowercase filter would create two tokens, **["hello", "world"]**. Below is an example of how to use the lowercase filter:
+Below is an example of how to use the lowercase filter:
 
 ```surql
 DEFINE ANALYZER example_lowercase TOKENIZERS class FILTERS lowercase;
 ```
 
+For example, if you had the text **"Hello World"**, the `class` tokenizer would split by whitespace and the `lowercase` filter would change to lowercase, returning **["hello", "world"]**. 
+
 ### `snowball(language)`
 
-The snowball filter applies Snowball stemming to tokens, reducing them to their root form and converts the case to lowercase. The following supported languages can be passed as a parameter in snowball: Arabic, Danish, Dutch, English, French, German, Greek, Hungarian, Italian, Norwegian, Portuguese, Romanian, Russian, Spanish, Swedish, Tamil, Turkish.
+The snowball filter applies Snowball stemming to tokens, reducing them to their root form and converting the case to lowercase. The following supported languages can be passed as a parameter in snowball: Arabic, Danish, Dutch, English, French, German, Greek, Hungarian, Italian, Norwegian, Portuguese, Romanian, Russian, Spanish, Swedish, Tamil, Turkish. ISO 639 codes of a language can also be passed in, so `snowball(eng)` and `snowball(en)` are also valid input.
 
-For example, if you had the text **"running cats"**, the snowball filter would create two tokens, **["run", "cat"]**. Below is an example of how to use the snowball filter with the English language:
+Below is an example of how to use the snowball filter with the English language:
 
 ```surql
 DEFINE ANALYZER example_snowball TOKENIZERS class FILTERS snowball(english);
 ```
 
+For example, if you had the text **"running cats"**, the `class` tokenizer would split by whitespace and `snowball` would turn into their root forms, returning **["run", "cat"]**. 
+
 ### `uppercase`
 
 The uppercase filter converts tokens to uppercase, ensuring text consistency in uppercase format. It can be useful when case-insensitivity is required for specific analysis or search operations.
 
-For example, if you had the text **"Hello World"**, the uppercase filter would create two tokens, **["HELLO", "WORLD"]**. Below is an example of how to use the uppercase filter:
+Below is an example of how to use the uppercase filter:
 
 ```surql
-DEFINE ANALYZER example_uppercase TOKENIZERS class FILTERS uppercase;
+DEFINE ANALYZER example_uppercase TOKENIZERS class FILTERS uppercase;`
 ```
+
+For example, if you had the text **"Hello World"**, the `class` tokenizer would split by whitespace and the `uppercase` filter would change to uppercase, returning **["HELLO", "WORLD"]**. 
 
 ## Using `IF NOT EXISTS` clause <l className='purple'>Since 1.3.0</l>
 
