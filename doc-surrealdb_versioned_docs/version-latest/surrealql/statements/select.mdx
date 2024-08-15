@@ -33,6 +33,7 @@ SELECT [ VALUE ] @fields [ AS @alias ]
 	[ LIMIT [ BY ] @limit ]
 	[ START [ AT ] @start ]
 	[ FETCH @fields ... ]
+	[ VERSION @datetime ]
 	[ TIMEOUT @duration ]
 	[ PARALLEL ]
 	[TEMPFILES]
@@ -441,6 +442,37 @@ This is needed, because the query would otherwise not be deterministic.
 SELECT * FROM ONLY table_name;
 -- Succeeds
 SELECT * FROM ONLY table_name LIMIT 1;
+```
+
+## The `VERSION` clause
+
+With SurrealKV:
+
+```surql
+ns/db> create person;
+[[{ id: person:qj47yrvqacdykdlcyuf7 }]]
+
+ns/db> return time::now();
+[d'2024-08-15T00:18:37.958464Z']
+
+ns/db> select * from person version d'2024-08-15T00:18:37.958464Z';
+[[{ id: person:qj47yrvqacdykdlcyuf7 }]]
+
+ns/db> create person;
+[[{ id: person:luime2cfzyyrx75hewho }]]
+
+ns/db> select * from person version d'2024-08-15T00:18:37.958464Z';
+[[{ id: person:qj47yrvqacdykdlcyuf7 }]]
+
+ns/db> select * from person;
+[[{ id: person:luime2cfzyyrx75hewho }, { id: person:qj47yrvqacdykdlcyuf7 }]]
+```
+
+Other storage engines:
+
+```surql
+ns/db> select * from person version d'2024-08-15T00:20:10.134065Z';
+['The underlying datastore does not support versioned queries']
 ```
 
 ## Learn more
