@@ -1,0 +1,29 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  missing-functions:
+    name: Detect missing functions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+        working-directory: ./scripts
+      - run: bun run index.ts
+        working-directory: ./scripts
+        env:
+          EXCLUDED_FUNCS: |
+            .chain
+          NOT_IMPLEMENTED_FUNCS: |
+            string::distance::hamming
+            string::distance::levenshtein
+            string::similarity::jaro
+            vector::distance::mahalanobis
+            vector::similarity::spearman
+
