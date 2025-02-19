@@ -1,0 +1,40 @@
+---
+sidebar_position: 3
+sidebar_label: DEFINE API
+title: DEFINE API statement | SurrealQL
+description: A DEFINE API statement can be used to set endpoints with custom middleware and permissions.
+---
+import Since from '@components/shared/Since.astro'
+
+<Since v="v2.2.0" />
+
+# DEFINE API statement
+
+The `DEFINE API` statements allows a custom endpoint to be created.
+
+## Statement syntax
+
+```syntax title="SurrealQL Syntax"
+DEFINE API [ OVERWRITE | IF NOT EXISTS ] @endpoint
+    [ FOR @HTTP_method, .. ]
+    [ MIDDLEWARE @function, .. ]
+    [ THEN { @expression } ]
+```
+
+## Example usage
+
+```surql
+DEFINE API OVERWRITE "/test"
+    FOR get, post 
+        MIDDLEWARE
+            api::req::raw_body(false)
+        THEN {
+            RETURN {
+                status: 404,
+                body: $request.body,
+                headers: {
+                    'bla': '123'
+                }
+            };
+        };
+```
