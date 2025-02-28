@@ -297,7 +297,7 @@ An analyzer that uses a single mapper filter can then use this lemmatizer to uni
 ```surql
 DEFINE ANALYZER error_filter FILTERS mapper('error_filter.txt');
 
-LET $messages = 
+LET $messages =
 	["File not found", "Datei nicht gefunden", "Zeitüberschreitung"]
 	.map(|$word| $word.replace(' ', '_'))
 	.join(' ');
@@ -383,7 +383,10 @@ search::analyze("example_ngram", "apple banana");
 
 ### `snowball(language)`
 
-The snowball filter applies Snowball stemming to tokens, reducing them to their root form and converts the case to lowercase. The following supported languages can be passed as a parameter in snowball: Arabic, Danish, Dutch, English, French, German, Greek, Hungarian, Italian, Norwegian, Portuguese, Romanian, Russian, Spanish, Swedish, Tamil, Turkish.
+> [!NOTE]
+> Finnish was added to the list of languges in SurrealDB version 2.2.2.
+
+The snowball filter applies Snowball stemming to tokens, reducing them to their root form and converts the case to lowercase. The following supported languages can be passed as a parameter in snowball: Arabic, Danish, Dutch, English, Finnish, French, German, Greek, Hungarian, Italian, Norwegian, Portuguese, Romanian, Russian, Spanish, Swedish, Tamil, Turkish.
 
 ```surql
 DEFINE ANALYZER english_snowball TOKENIZERS class FILTERS snowball(english);
